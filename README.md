@@ -1,3 +1,9 @@
+## Contact information:-
+
+| Type | Address/Details |
+| :---: | --- |
+| Forums | [ChannelsDVR forum]timstephens24
+
 
 
 Had chrome issues and need to make some changes to get Chrome to work properly when scanning:

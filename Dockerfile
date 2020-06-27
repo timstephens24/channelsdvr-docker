@@ -13,11 +13,13 @@ RUN \
   echo "**** install runtime packages ****" && \
   apt-get update && \
   apt-get install -y \
-    ca-certificates \
-    chromium-browser \
     curl \
     iproute2 \
     wget && \
+  echo "**** install chrome ****" && \
+  curl -LO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+  apt-get install -y ./google-chrome-stable_current_amd64.deb && \
+  rm google-chrome-stable_current_amd64.deb && \
   echo "**** install channels-dvr ****" && \
   curl -f -s https://getchannels.com/dvr/setup.sh | DOWNLOAD_ONLY=1 sh && \
   echo "**** ensure abc user's home folder is /channels-dvr ****" && \
