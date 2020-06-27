@@ -3,17 +3,27 @@
 | Type | Address/Details |
 | :---: | --- |
 | Forums | [ChannelsDVR forum]timstephens24
+| Email | [Gmail] timstephens24@gmail.com
 
+Learn more about Channels at https://getchannels.com
 
+The main difference between this docker and the official docker from fancybits is that it runs Channels DVR as a normal user that's mappable with environment variables instead of root. This gives all my media the correct permissions as owned by my user and not by root.
 
-Had chrome issues and need to make some changes to get Chrome to work properly when scanning:
+I also needed TVE support (Comcast only gives me DIY in SD... ew), so I needed to bake that support in as well. I based all this off the linuxserver.io group's docker containers and used their ubuntu focal base as a start so I didn't need to recreate it (and subsequently update it).
 
+It's also set to expose port 8089 (tcp) and 1900 (udp), so it should be able to run with just exposing those ports, but I run it in host mode. Let me know if there's any issues here.
+
+I do have some Chrome issues and needed to make some changes to get Chrome to work properly when scanning:
 ```
+DOCKERDIR=/opt/docker
+mkdir ${DOCKERDIR}/shared
 wget https://raw.githubusercontent.com/jfrazelle/dotfiles/master/etc/docker/seccomp/chrome.json -O ${DOCKERDIR}/shared/chrome.json
 ```
 
-docker compose:
-  
+Personally I run it with docker compose, and I use hardware transcoding. My .env file has the DOCKERDIR, PUID, PGID, TZ, and LOCALTIME variables set, so if you don't use that make sure you change the variables below to the actual value. Also, if you want don't hardware transcoding (or it's not supported on your system) remove the last two lines:
+```
+version: "3.8"
+services:
   channels-dvr:
     network_mode: host
     restart: always
@@ -28,9 +38,26 @@ docker compose:
       - TZ=${TZ}
     volumes:
       - ${DOCKERDIR}/channels-dvr:/channels-dvr
-      - /mnt/data:/mnt/data
+      - /mnt/disk/dvr/recordings:/shares/DVR # where you put the media files
       - ${LOCALTIME}:/etc/localtime:ro
     devices:
       - /dev/dri:/dev/dri
+```
 
-
+A docker run command that's similar would be:
+```
+docker run \
+  --detach \
+  --net=host \
+  --restart=always \
+  --name=channels-dvr \
+  --security-opt seccomp=/opt/docker/shared/chrome.json
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=America/New_York \
+  --volume /mnt/disk/dvr/config:/channels-dvr \
+  --volume /mnt/disk/dvr/recordings:/shares/DVR \
+  --volume /etc/localtime:/etc/localtime:ro
+  --device /dev/dri:/dev/dri \
+  timstephens24/channels-dvr
+```
