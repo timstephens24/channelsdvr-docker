@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv bash
+
+
+UMASK_SET=${UMASK_SET:-022}
+
+umask "$UMASK_SET"
+export HOME=/channels-dvr
+echo "Running Channels DVR"
+exec \
+  s6-setuidgid abc /bin/bash -c \
+  'cd /channels-dvr/data && ../latest/channels-dvr >> channels-dvr.log 2>&1'
