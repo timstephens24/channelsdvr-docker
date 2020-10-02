@@ -5,14 +5,19 @@ ARG CHANNELS_RELEASE
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="ChiefWulf"
 
+#Add needed nvidia environment variables for https://github.com/NVIDIA/nvidia-docker
+ENV NVIDIA_DRIVER_CAPABILITIES="compute,video,utility"
+
 # environment settings
 ARG DEBIAN_FRONTEND="noninteractive"
-ENV NVIDIA_DRIVER_CAPABILITIES="compute,video,utility"
 
 RUN \
   echo "**** install runtime packages ****" && \
   apt-get update && \
   apt-get install -y \
+    udev \
+    jq \
+    unrar \
     curl \
     iproute2 \
     wget && \
