@@ -62,4 +62,4 @@ docker run \
   timstephens24/channels-dvr
 ```
 
-I've also tested this with Unraid using NVIDIA for hardware transcoding, so this should work with the others if you add in the environmental values for NVIDIA. For Unraid I also have templates at: https://github.com/timstephens24/docker-template. The only extra thing you need to add is '--runtime=nvidia --security-opt seccomp=/mnt/user/appdata/shared/chrome.json' (you need to still download the chrome.json mentioned above).
+I've also tested this with Unraid using NVIDIA for hardware transcoding, so this should work with the others if you add in the environmental values for NVIDIA. For Unraid I also have templates at: https://github.com/timstephens24/docker-template. The only extra thing you need to add is '--runtime=nvidia --security-opt seccomp=/mnt/user/appdata/shared/chrome.json' (you need to still download the chrome.json mentioned above and my ${DOCKERDIR} is /mnt/user/appdata) and then modify the other directories accordingly. I have channels-dvr located at /mnt/user/appdata/channels-dvr and my Media folder is /mnt/user/data/Media and I have the ChannelsDVR folder in there for recordings.
