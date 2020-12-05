@@ -12,30 +12,19 @@ ENV NVIDIA_DRIVER_CAPABILITIES="compute,video,utility"
 # environment settings
 ARG DEBIAN_FRONTEND="noninteractive"
 
-RUN \
-  echo "**** install runtime packages ****" && \
-  apt-get update && \
-  apt-get install -y \
-    udev \
-    jq \
-    unrar \
-    curl \
-    iproute2 \
-    wget && \
-  echo "**** install chrome ****" && \
-  curl -LO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-  apt-get install -y ./google-chrome-stable_current_amd64.deb && \
-  rm google-chrome-stable_current_amd64.deb && \
-  echo "**** install channels-dvr ****" && \
-  curl -f -s https://getchannels.com/dvr/setup.sh | DOWNLOAD_ONLY=1 sh && \
-  echo "**** ensure abc user's home folder is /channels-dvr ****" && \
-  usermod -d /channels-dvr abc && \
-  echo "**** cleanup ****" && \
-  apt-get clean && \
-  rm -rf \
-    /tmp/* \
-    /var/lib/apt/lists/* \
-    /var/tmp/*
+RUN echo "**** install chrome ****" \
+  && apt update \
+  && apt install wget \
+  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
+  && apt update \
+  && apt install -y --no-install-recommends google-chrome-stable \
+  && echo "**** install channels-dvr ****" \
+  && curl -f -s https://getchannels.com/dvr/setup.sh | DOWNLOAD_ONLY=1 sh \
+  && echo "**** ensure abc user's home folder is /channels-dvr ****" \
+  && usermod -d /channels-dvr abc \
+  && echo "**** cleanup ****" \
+  && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
 
 # add local files
 COPY root/ /
