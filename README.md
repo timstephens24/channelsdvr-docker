@@ -1,4 +1,4 @@
-Learn more about Channels at https://getchannels.com
+# Channels DVR Docker
 
 The main difference between this docker and the official docker from fancybits is that it runs Channels DVR as a normal user that's mappable with environment variables instead of root. This gives all my media the correct permissions as owned by my user and not by root.
 
@@ -8,6 +8,8 @@ It's also set to expose port 8089 (tcp) and 1900 (udp), so it should be able to 
 
 For Unraid I also have templates at: https://github.com/timstephens24/docker-templates. I have channels-dvr located at /mnt/user/appdata/channels-dvr and my Media folder is /mnt/user/data/Media and I have the ChannelsDVR folder in there for recordings, so you will need to modify them accordingly.
 
+## Usage
+Example using `docker-compose`:
 ```
 version: "3.8"
 services:
@@ -31,8 +33,7 @@ services:
     devices:
       - /dev/dri:/dev/dri
 ```
-
-A docker run command that's similar would be:
+Example using `docker run`:
 ```
 docker run \
   --detach \
@@ -56,5 +57,8 @@ docker run \
 
 | Type | Address/Details |
 | :---: | --- |
+| Channels | https://getchannels.com
 | Forums | timstephens24
 | Email | timstephens24@gmail.com
+| Github | https://github.com/timstephens24/channelsdvr-docker
+
