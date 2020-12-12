@@ -1,10 +1,3 @@
-## Contact information:-
-
-| Type | Address/Details |
-| :---: | --- |
-| Forums | timstephens24
-| Email | timstephens24@gmail.com
-
 Learn more about Channels at https://getchannels.com
 
 The main difference between this docker and the official docker from fancybits is that it runs Channels DVR as a normal user that's mappable with environment variables instead of root. This gives all my media the correct permissions as owned by my user and not by root.
@@ -59,3 +52,9 @@ docker run \
   timstephens24/channels-dvr
 ```
 
+## Contact information:
+
+| Type | Address/Details |
+| :---: | --- |
+| Forums | timstephens24
+| Email | timstephens24@gmail.com
