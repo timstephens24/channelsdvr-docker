@@ -4,7 +4,6 @@ ARG VERSION
 ARG CHANNELS_RELEASE
 LABEL build_version="stephens.cc version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="timstephens24"
-MAINTAINER timstephens24 <tim@stephens.cc>
 
 #Add needed nvidia environment variables for https://github.com/NVIDIA/nvidia-docker
 ENV NVIDIA_DRIVER_CAPABILITIES="compute,video,utility"
