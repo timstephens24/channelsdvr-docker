@@ -9,7 +9,7 @@ It's also set to expose port 8089 (tcp) and 1900 (udp), so it should be able to 
 For Unraid I also have templates at: https://github.com/timstephens24/docker-templates. I have channels-dvr located at /mnt/user/appdata/channels-dvr and my Media folder is /mnt/user/data/Media and I have the ChannelsDVR folder in there for recordings, so you will need to modify them accordingly.
 
 ## Usage
-Example using `docker-compose`:
+### docker-compose (recommended)
 ```yaml
 version: "3.8"
 services:
@@ -33,7 +33,7 @@ services:
     devices:
       - /dev/dri:/dev/dri
 ```
-Example using `docker run`:
+### docker cli
 ```
 docker run \
   --detach \
