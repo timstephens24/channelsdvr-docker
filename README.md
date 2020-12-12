@@ -54,7 +54,7 @@ docker run \
   -e NVIDIA_VISIBLE_DEVICES=all \
   --volume /opt/channels:/channels-dvr \
   --volume /mnt/disk/dvr/recordings:/shares/DVR \
-  --volume /etc/localtime:/etc/localtime:ro
+  --volume /etc/localtime:/etc/localtime:ro \
   --device /dev/dri:/dev/dri \
   timstephens24/channels-dvr
 ```
