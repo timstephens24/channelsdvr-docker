@@ -2,18 +2,19 @@
 
 | Type | Address/Details |
 | :---: | --- |
-| Forums | [ChannelsDVR forum]timstephens24
-| Email | [Gmail] timstephens24@gmail.com
+| Forums | timstephens24
+| Email | timstephens24@gmail.com
 
 Learn more about Channels at https://getchannels.com
 
 The main difference between this docker and the official docker from fancybits is that it runs Channels DVR as a normal user that's mappable with environment variables instead of root. This gives all my media the correct permissions as owned by my user and not by root.
 
-I also needed TVE support (Comcast only gives me DIY in SD... ew), so I needed to bake that support in as well. I based all this off the linuxserver.io group's docker containers and used their ubuntu focal base as a start so I didn't need to recreate it (and subsequently update it).
+This supports TVE and hardware transcoding with Intel and NVIDIA. If you don't need the Intel support remove the line the says `--device /dev/dri:/dev/dri \` (or the last two lines in the docker-compose). If you don't need NVIDIA support you can remove the environment variable for `NVIDIA_VISIBLE_DEVICES` but there's no harm in leaving it.
 
 It's also set to expose port 8089 (tcp) and 1900 (udp), so it should be able to run with just exposing those ports, but I run it in host mode. Let me know if there's any issues here.
 
-Personally I prefer to run it with docker compose, and use hardware transcoding. My .env file has the DOCKERDIR, PUID, PGID, TZ, and LOCALTIME variables set, so if you don't use that make sure you change the variables below to the actual value. Also, if you want don't hardware transcoding (or it's not supported on your system) remove the last two lines:
+For Unraid I also have templates at: https://github.com/timstephens24/docker-templates. I have channels-dvr located at /mnt/user/appdata/channels-dvr and my Media folder is /mnt/user/data/Media and I have the ChannelsDVR folder in there for recordings, so you will need to modify them accordingly.
+
 ```
 version: "3.8"
 services:
@@ -26,13 +27,14 @@ services:
     security_opt:
       - seccomp=unconfined
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+      - NVIDIA_VISIBLE_DEVICES=all
     volumes:
-      - ${DOCKERDIR}/channels-dvr:/channels-dvr
+      - /opt/channels-dvr:/channels-dvr
       - /mnt/disk/dvr/recordings:/shares/DVR # where you put the media files
-      - ${LOCALTIME}:/etc/localtime:ro
+      - /etc/localtime:/etc/localtime:ro
     devices:
       - /dev/dri:/dev/dri
 ```
@@ -44,15 +46,16 @@ docker run \
   --net=host \
   --restart=always \
   --name=channels-dvr \
+  --hostname=channels \
   --security-opt seccomp=unconfined
   -e PUID=1000 \
   -e PGID=1000 \
   -e TZ=America/New_York \
-  --volume /mnt/disk/dvr/config:/channels-dvr \
+  -e NVIDIA_VISIBLE_DEVICES=all \
+  --volume /opt/channels:/channels-dvr \
   --volume /mnt/disk/dvr/recordings:/shares/DVR \
   --volume /etc/localtime:/etc/localtime:ro
   --device /dev/dri:/dev/dri \
   timstephens24/channels-dvr
 ```
 
-I've also tested this with Unraid using NVIDIA for hardware transcoding, so this should work with the others if you add in the environmental values for NVIDIA. For Unraid I also have templates at: https://github.com/timstephens24/docker-templates. I have channels-dvr located at /mnt/user/appdata/channels-dvr and my Media folder is /mnt/user/data/Media and I have the ChannelsDVR folder in there for recordings, so you will need to modify them accordingly.
