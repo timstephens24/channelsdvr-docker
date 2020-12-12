@@ -10,7 +10,7 @@ For Unraid I also have templates at: https://github.com/timstephens24/docker-tem
 
 ## Usage
 Example using `docker-compose`:
-```
+```yaml
 version: "3.8"
 services:
   channels-dvr:
