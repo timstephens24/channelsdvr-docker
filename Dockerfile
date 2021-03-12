@@ -13,7 +13,7 @@ ARG DEBIAN_FRONTEND="noninteractive"
 
 RUN echo "**** install chrome ****" \
   && apt update \
-  && apt install wget \
+  && apt install -y --no-install-recommends wget iproute2 \
   && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
   && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
   && apt update \
