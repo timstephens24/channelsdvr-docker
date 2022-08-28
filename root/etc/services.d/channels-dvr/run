@@ -6,6 +6,12 @@ UMASK_SET=${UMASK_SET:-022}
 umask "$UMASK_SET"
 export HOME=/channels-dvr
 echo "Running Channels DVR"
+if [ ! -f /channels-dvr/latest/channels-dvr ]; then
+  cd /
+  curl -f -s https://getchannels.com/dvr/setup.sh | DOWNLOAD_ONLY=1 sh
+  usermod -d /channels-dvr abc
+  chown -R abc:abc /channels-dvr
+fi
 exec \
   s6-setuidgid abc /bin/bash -c \
   'cd /channels-dvr/data && ../latest/channels-dvr >> channels-dvr.log 2>&1'

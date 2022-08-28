@@ -30,6 +30,7 @@ RUN echo "**** install chrome ****" \
   && curl -f -s https://getchannels.com/dvr/setup.sh | DOWNLOAD_ONLY=1 sh \
   && echo "**** ensure abc user's home folder is /channels-dvr ****" \
   && usermod -d /channels-dvr abc \
+  && chown -R abc:abc /channels-dvr \
   && echo "**** cleanup ****" \
   && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
 
