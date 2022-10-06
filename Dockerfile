@@ -11,33 +11,21 @@ ENV NVIDIA_DRIVER_CAPABILITIES="compute,video,utility"
 # environment settings
 ARG DEBIAN_FRONTEND="noninteractive"
 
-RUN echo "**** install chrome ****" \
-  && apt-get update \
-  && apt-get install -y --no-install-recommends wget iproute2 beignet-opencl-icd jq ocl-icd-libopencl1 udev unrar wget \
-  && COMP_RT_RELEASE=$(curl -sX GET "https://api.github.com/repos/intel/compute-runtime/releases/latest" | jq -r '.tag_name') \
-  && COMP_RT_URLS=$(curl -sX GET "https://api.github.com/repos/intel/compute-runtime/releases/tags/${COMP_RT_RELEASE}" | jq -r '.body' | grep wget | sed 's|wget ||g') \
-  && mkdir -p /opencl-intel \
-  && for i in ${COMP_RT_URLS}; do \
-      i=$(echo ${i} | tr -d '\r'); \
-      echo "**** downloading ${i} ****"; \
-      curl -o "/opencl-intel/$(basename ${i})" -L "${i}"; \
-    done \
+RUN echo "**** add Intel repo ****" \
+  && curl -sL https://repositories.intel.com/graphics/intel-graphics.key | apt-key add - \
+  && echo 'deb [arch=amd64] https://repositories.intel.com/graphics/ubuntu focal main' > /etc/apt/sources.list.d/intel.list \
+  && echo "**** install chrome repo ****" \
   && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
   && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
-  && apt-get update \
-  && apt-get install -y --no-install-recommends google-chrome-stable \
+  && echo "**** install runtimes ****"
+  && apt-get install -y --no-install-recommends google-chrome-stable iproute2 jq udev unrar wget \
+    intel-igc-cm=1.0.128+i699.3~u20.04 intel-opencl-icd=21.49.21786+i643~u20.04 libigc1=1.0.10409+i699.3~u20.04 \
+    libigdfcl1=1.0.10409+i699.3~u20.04 libigdgmm11=21.3.3+i643~u20.04 \
   && echo "**** install channels-dvr ****" \
   && curl -f -s https://getchannels.com/dvr/setup.sh | DOWNLOAD_ONLY=1 sh \
   && echo "**** ensure abc user's home folder is /channels-dvr ****" \
   && usermod -d /channels-dvr abc \
   && chown -R abc:abc /channels-dvr \
-  #&& echo "**** install tailscale ****" \
-  #&& curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null \
-  #&& curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list \
-  #&& apt-get update \
-  #&& apt-get install tailscale \
-  #&& tailscale up \
-  #&& systemctl enable tailscale \
   && echo "**** cleanup ****" \
   && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
 
