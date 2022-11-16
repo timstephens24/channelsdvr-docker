@@ -18,6 +18,8 @@ services:
     restart: always
     container_name: channels-dvr
     hostname: channels
+    # When using Nvidia Hardware and docker-compose version 1.29.2 add runtime
+    runtime: nvidia
     image: timstephens24/channels-dvr
     security_opt:
       - seccomp=unconfined
@@ -41,6 +43,7 @@ docker run \
   --restart=always \
   --name=channels-dvr \
   --hostname=channels \
+  --runtime=nvidia \
   --security-opt seccomp=unconfined
   -e PUID=1000 \
   -e PGID=1000 \
