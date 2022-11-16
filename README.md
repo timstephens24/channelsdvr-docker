@@ -18,7 +18,7 @@ services:
     restart: always
     container_name: channels-dvr
     hostname: channels
-    # When using Nvidia Hardware and docker-compose version 1.29.2 add runtime
+    # Remove 'runtime: nvidia' when not using NVIDIA hardware and docker-compose version 1.29.2
     runtime: nvidia
     image: timstephens24/channels-dvr
     security_opt:
@@ -32,10 +32,12 @@ services:
       - /opt/channels-dvr:/channels-dvr
       - /mnt/disk/dvr/recordings:/shares/DVR # where you put the media files
       - /etc/localtime:/etc/localtime:ro
+    # Remove 'devices' section when not using Intel hardware transcoding
     devices:
       - /dev/dri:/dev/dri
 ```
 ### docker cli
+# Apply the comments above to the below as well
 ```
 docker run \
   --detach \
