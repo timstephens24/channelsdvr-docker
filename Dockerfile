@@ -15,9 +15,10 @@ RUN echo "**** add Intel repo ****" \
   && curl -sL https://repositories.intel.com/graphics/intel-graphics.key | apt-key add - \
   && echo 'deb [arch=amd64] https://repositories.intel.com/graphics/ubuntu focal main' > /etc/apt/sources.list.d/intel.list \
   && echo "**** install chrome repo ****" \
-  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && curl -sL https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
   && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list \
-  && echo "**** install runtimes ****"
+  && echo "**** install runtimes ****" \
+  && apt-get update \
   && apt-get install -y --no-install-recommends google-chrome-stable iproute2 jq udev unrar wget \
     intel-igc-cm=1.0.128+i699.3~u20.04 intel-opencl-icd=21.49.21786+i643~u20.04 libigc1=1.0.10409+i699.3~u20.04 \
     libigdfcl1=1.0.10409+i699.3~u20.04 libigdgmm11=21.3.3+i643~u20.04 \
