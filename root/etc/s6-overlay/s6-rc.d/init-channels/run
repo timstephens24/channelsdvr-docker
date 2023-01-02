@@ -1,0 +1,35 @@
+#!/usr/bin/with-contenv bash
+
+# create folders
+if [ ! -d "/channels-dvr/data" ]; then \
+    mkdir -p mkdir -p "/channels-dvr"
+    chown -R abc:abc /channels-dvr
+fi
+
+# check Library permissions
+PUID=${PUID:-911}
+if [ ! "$(stat -c %u /channels-dvr/data)" = "$PUID" ]; then
+  echo "Change in ownership detected, please be patient while we chown existing files"
+  echo "This could take some time"
+  chown abc:abc -R \
+  /channels-dvr
+fi
+if [ ! "$(stat -c %u /channels-dvr/latest)" = "$PUID" ]; then
+  echo "Change in ownership detected, please be patient while we chown existing files"
+  echo "This could take some time"
+  chown abc:abc -R \
+  /channels-dvr
+fi
+
+# check if the channels-dvr file exists
+if [ ! -f /channels-dvr/latest/channels-dvr ]; then
+  echo "The channels-dvr binary does not exist, re-installing ChannelsDVR..."
+  cd / && curl -f -s https://getchannels.com/dvr/setup.sh | DOWNLOAD_ONLY=1 sh && cd -
+  usermod -d /channels-dvr abc
+  chown -R abc:abc /channels-dvr
+fi
+
+# permissions (non-recursive) on config root and folders
+chown abc:abc \
+    /channels-dvr \
+    /channels-dvr/*

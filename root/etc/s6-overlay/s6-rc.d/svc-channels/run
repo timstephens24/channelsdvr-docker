@@ -1,0 +1,17 @@
+#!/usr/bin/with-contenv bash
+
+echo "Starting Channels DVR... (you can ignore the libusb_init error)"
+export CHANNELS_INFO_MODEL=$(uname -m)
+export CHANNELS_INFO_PLATFORM_VERSION=$(uname -r)
+# check if the channels-dvr file exists
+if [ ! -f /channels-dvr/latest/channels-dvr ]; then
+  echo "The channels-dvr binary does not exist, re-installing ChannelsDVR..."
+  cd / && curl -f -s https://getchannels.com/dvr/setup.sh | DOWNLOAD_ONLY=1 sh && cd -
+  usermod -d /channels-dvr abc
+  chown -R abc:abc /channels-dvr
+fi
+
+exec \
+    s6-notifyoncheck -d -n 300 -w 1000 -c "nc -z localhost 8089" \
+    s6-setuidgid abc /bin/bash -c \
+    'cd /channels-dvr/data && ../latest/channels-dvr >> channels-dvr.log 2>&1'

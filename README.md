@@ -18,7 +18,7 @@ services:
     restart: always
     container_name: channels-dvr
     hostname: channels
-    image: timstephens24/channels-dvr
+    image: timstephens24/channels-dvr:latest
     security_opt:
       - seccomp=unconfined
     environment:
@@ -48,7 +48,7 @@ docker run \
   --volume /mnt/disk/dvr/recordings:/shares/DVR \
   --volume /etc/localtime:/etc/localtime:ro \
   --device /dev/dri:/dev/dri \
-  timstephens24/channels-dvr
+  timstephens24/channels-dvr:latest
 ```
 ## Usage for NVIDIA
 ### docker-compose (recommended)
