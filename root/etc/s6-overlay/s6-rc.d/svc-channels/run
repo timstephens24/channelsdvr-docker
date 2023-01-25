@@ -1,6 +1,5 @@
 #!/usr/bin/with-contenv bash
 
-echo "Starting Channels DVR... (you can ignore the libusb_init error)"
 export CHANNELS_INFO_MODEL=$(uname -m)
 export CHANNELS_INFO_PLATFORM_VERSION=$(uname -r)
 # check if the channels-dvr file exists
@@ -11,6 +10,16 @@ if [ ! -f /channels-dvr/latest/channels-dvr ]; then
   chown -R abc:abc /channels-dvr
 fi
 
+echo "Verifying file permissions..."
+EXECUTABLEFILES=( "channels-dvr" "comskip" "ffmpeg" "ffmpeg-dl" "ffprobe" )
+for FILE in "${EXECUTABLEFILES[@]}"; do
+  if [ ! -x "${FILE}" ]; then
+    echo "Fixing permissions for /channels-dvr/latest/${FILE}..."
+    chmod +x /channels-dvr/latest/"${FILE}"
+  fi
+done
+
+echo "Starting Channels DVR... (you can ignore the libusb_init error)"
 exec \
     s6-notifyoncheck -d -n 300 -w 1000 -c "nc -z localhost 8089" \
     s6-setuidgid abc /bin/bash -c \
