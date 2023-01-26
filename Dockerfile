@@ -20,6 +20,10 @@ RUN echo "**** add chrome repo ****" \
   && echo "**** ensure abc user's home folder is /channels-dvr ****" \
   && usermod -d /channels-dvr abc \
   && chown -R abc:abc /channels-dvr \
+  && find /channels-dvr -type f -name channels-dvr -exec chmod +x {} \; \
+  && find /channels-dvr -type f -name "ffmpeg"* -exec chmod +x {} \; \
+  && find /channels-dvr -type f -name comskip -exec chmod +x {} \; \
+  && find /channels-dvr -type f -name ffprobe -exec chmod +x {} \; \
   && echo "**** cleanup ****" \
   && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
 
