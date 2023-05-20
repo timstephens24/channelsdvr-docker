@@ -1,4 +1,4 @@
-FROM timstephens24/baseimage-ubuntu:jammy
+FROM ghcr.io/linuxserver/baseimage-ubuntu:jammy
 ARG BUILD_DATE
 LABEL build_version="stephens.cc build-date:${BUILD_DATE}"
 LABEL maintainer="tim@stephens.cc"

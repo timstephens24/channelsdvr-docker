@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-ubuntu:jammy
+FROM timstephens24/baseimage-ubuntu:jammy
 ARG BUILD_DATE
 LABEL build_version="stephens.cc build-date:${BUILD_DATE}"
 LABEL maintainer="tim@stephens.cc"
@@ -16,7 +16,9 @@ RUN echo "**** add chrome repo ****" \
   && apt-get update \
   && apt-get install -y --no-install-recommends google-chrome-stable iproute2 jq mesa-va-drivers udev unrar wget \
   && echo "**** install channels-dvr ****" \
-  && curl -f -s https://getchannels.com/dvr/setup.sh | DOWNLOAD_ONLY=1 sh \
+  && curl https://getchannels.com/dvr/setup.sh --output /usr/local/bin/setup.sh \
+  && chmod +x /usr/local/bin/setup.sh \
+  && /usr/local/bin/setup.sh DOWNLOAD_ONLY=1 \
   && echo "**** ensure abc user's home folder is /channels-dvr ****" \
   && usermod -d /channels-dvr abc \
   && chown -R abc:abc /channels-dvr \
