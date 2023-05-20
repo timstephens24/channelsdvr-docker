@@ -102,6 +102,10 @@ The Channels-DVR setup.sh is packaged with the container in the /usr/local/bin f
 
 This works really well to downgrade or upgrade to pre-release versions really easy. I did test rolling back stable releases, which you can do, but Channels will download the most recent stable release when it starts, and then will potentially automatically update itself. This is normal Channels behavior.
 
+If you want to download a specific version without updating Channels, just run:
+
+```docker exec -it channels-dvr bash -c "DVR_VERSION=2023.05.20.0631 DOWNLOAD_ONLY=1 /usr/local/bin/setup.sh"```
+
 ## Contact information:
 
 | Type | Address/Details |
